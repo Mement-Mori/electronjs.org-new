@@ -3,7 +3,10 @@ node_modules
 .DS_Store
 .env
 .vscode/settings.json
+blog/
 build/
 content/
 docs/
-blog/
+temp-i18n/
+# The translated markdown files, we will switch to i18n once the json files are pulled by `e/i18n`
+current/

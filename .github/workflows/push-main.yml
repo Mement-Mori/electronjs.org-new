@@ -1,4 +1,4 @@
-name: Deploy EN
+name: Push main
 
 on:
   push:
@@ -25,15 +25,20 @@ jobs:
         env:
           CI: true
 
-      - name: Download cache
-        run: ./scripts/bin/azcopy copy "https://electronjsorg.blob.core.windows.net/%24web/*?${{ SSA }}" "./build" --recursive
+      - name: Upload sources to Crowdin
+        run: yarn i18n:upload
         env:
-          SSA: ${{ secrets.SSA }}
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+
+      - name: Download cache
+        run: ./scripts/bin/azcopy copy "https://electronjsorg.blob.core.windows.net/%24web/*?$SAS" "./build" --recursive
+        env:
+          SAS: ${{ secrets.SAS }}
 
       - name: Build EN
         run: yarn i18n:build en
 
       - name: Deploy
-        run: ./scripts/bin/azcopy copy "./build/*" "https://electronjsorg.blob.core.windows.net/%24web?${{ SSA }}" --recursive
+        run: ./scripts/bin/azcopy copy "./build/*" "https://electronjsorg.blob.core.windows.net/%24web?$SAS" --recursive
         env:
-          SAS: ${{ secrets.SSA }}
+          SAS: ${{ secrets.SAS }}
